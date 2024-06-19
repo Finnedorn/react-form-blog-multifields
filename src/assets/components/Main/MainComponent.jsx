@@ -16,27 +16,37 @@ const MainComponent = () => {
   const [published, setPublished] = useState(false);
   const [changingBg, setChangingBg] = useState("grey");
 
+
+  // changing background color //
+  
   useEffect(() => {
     const changingEffect = setInterval(() => {
       setChangingBg(changingBg === "grey" ? "black" : "grey");
     }, 5000);
-
     return () => clearInterval(changingEffect);
-  },[]);
+  },[]); //passo un array vuoto così da attivare useEffect solo una volta al mounting della page
+
   useEffect(() => {
     const changingEffect = setInterval(() => {
       setChangingBg(changingBg === "grey" ? "black" : "grey");
     }, 5000);
-
     return () => clearInterval(changingEffect);
-  },[changingBg]);
+  },[changingBg]); //al cambiamento di changingBg (del primo useEffect) attivo il secondo useEffect 
 
+  // post submit //
+
+  // gestisco il cambiamento di published
   useEffect(() => {
+    // setto published a true o false in base al checkmark
     setPostData({ ...postData, published: published });
+    // ma se è published avvio un alert di notifica abilitiazione
     if (published) {
       alert("Post abilitato per la pubblicazione");
     }
+    // cliccando sulla checkbox altero published attivando l'useEffect
   }, [published]);
+
+
   
   const postSubmit = (e) => {
     e.preventDefault();
@@ -52,6 +62,7 @@ const MainComponent = () => {
       published: false,
       tags: [],
     });
+    setPublished(false);
   };
 
   const postDelete = (id) => {
@@ -188,14 +199,12 @@ const MainComponent = () => {
                     </label>
                   </div>
               </div>
-
-
               {/* tags */}
             <div>
               <h4 className="mt-3">
                 Seleziona un tag
                 </h4>
-              <div className="d-flex">
+              {/* <div className="d-flex">
                 {tags.map((tag) => (
                   <div key={tag} className="px-2">
                     <label className="pe-1" htmlFor={tag}>{tag}</label>
@@ -208,7 +217,26 @@ const MainComponent = () => {
                   />
                   </div>
                 ))}
-              </div>
+              </div> */}
+              {tags.map((tag, index) => (
+                <label>
+                  {tag}
+                  <input 
+                  type="checkbox"
+                  checked={postData.tags.includes(tag)}
+                  onChange={() => {
+                    const updatedTags = postData.tags.includes(tag)
+                      ? postData.tags.filter(t => t !== tag) 
+                      : [...postData.tags, tag];
+            
+                    setPostData(prevData => ({
+                      ...prevData,
+                      tags: updatedTags
+                    }));
+                  }}
+                  />
+                </label>
+              ))}
             </div>
             <button
             type="submit"
