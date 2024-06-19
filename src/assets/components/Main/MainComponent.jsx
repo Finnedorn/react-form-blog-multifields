@@ -1,21 +1,31 @@
 import CardComponent from "../Card/CardComponent";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const MainComponent = () => {
 
   const [posts, setPosts] = useState([]);
-  const [newTitle, setNewTitle] = useState('');
-  const [newContent, setNewContent] = useState('');
   const [postData, setPostData] = useState({
     title: "",
     content: "",
-    image: "",
+    imageUrl: "",
     published: false,
     tags: [],
   });
   const tags = ["html", "css", "js", "php"];
+  const [published, setPublished] = useState(false);
+  const [changingBg, setChangingBg] = useState("white");
 
+  useEffect(() => {},[
+    
+  ]);
+  useEffect(() => {
+    setPostData({ ...postData, published: published });
+    if (published) {
+      alert("Post abilitato per la pubblicazione");
+    }
+  }, [published]);
+  
   const postSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -26,6 +36,8 @@ const MainComponent = () => {
     setPostData({
       title: "",
       content: "",
+      imageUrl: "",
+      published: false,
       tags: [],
     });
   };
@@ -56,7 +68,7 @@ const MainComponent = () => {
     <main
       className="container-fluid main"
       style={{
-        backgroundColor: "gray",
+        backgroundColor: changingBg,
         padding: "20px",
       }}
     >
@@ -78,8 +90,9 @@ const MainComponent = () => {
             key={post.id}
             id={post.id}
             title={post.title}
-            image={null}
             content={post.content}
+            image={post.imageUrl}
+            published={post.published}
             tags={post.tags}
             cardDelete={() => postDelete(post.id)}
             cardEdit={postEdit}
@@ -98,7 +111,7 @@ const MainComponent = () => {
         </h2>
         <div className="d-flex justify-content-center">
           <form onSubmit={postSubmit} className="createCard p-5">
-            <div>
+              <div>
                 <h4 className="mt-3">
                   Titolo
                 </h4>
@@ -122,6 +135,49 @@ const MainComponent = () => {
                 onChange={(e) => setPostData({ ...postData, content: e.target.value })}
                 />
               </div>
+              <div>
+                <h4 className="mt-3">
+                  Immagine
+                </h4>
+                <input
+                className="form-control"
+                type="text"
+                value={postData.imageUrl}
+                onChange={(e) => setPostData({ ...postData, imageUrl: e.target.value })}
+                />
+              </div>
+              <div className="mb-3">
+                  <h4>Stato</h4>
+                  <div className="form-check">
+                    <label class="form-check-label">
+                      non pubblico
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="not-published"
+                        name="not-published"
+                        onChange={() => setPublished(false)}
+                        checked={!published}
+                      />
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      pubblico
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="published"
+                        name="published"
+                        onChange={() => setPublished(true)}
+                        checked={published}
+                      />
+                    </label>
+                  </div>
+              </div>
+
+
+              {/* tags */}
             <div>
               <h4 className="mt-3">
                 Seleziona un tag
