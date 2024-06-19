@@ -14,11 +14,23 @@ const MainComponent = () => {
   });
   const tags = ["html", "css", "js", "php"];
   const [published, setPublished] = useState(false);
-  const [changingBg, setChangingBg] = useState("white");
+  const [changingBg, setChangingBg] = useState("grey");
 
-  useEffect(() => {},[
-    
-  ]);
+  useEffect(() => {
+    const changingEffect = setInterval(() => {
+      setChangingBg(changingBg === "grey" ? "black" : "grey");
+    }, 5000);
+
+    return () => clearInterval(changingEffect);
+  },[]);
+  useEffect(() => {
+    const changingEffect = setInterval(() => {
+      setChangingBg(changingBg === "grey" ? "black" : "grey");
+    }, 5000);
+
+    return () => clearInterval(changingEffect);
+  },[changingBg]);
+
   useEffect(() => {
     setPostData({ ...postData, published: published });
     if (published) {
@@ -70,6 +82,7 @@ const MainComponent = () => {
       style={{
         backgroundColor: changingBg,
         padding: "20px",
+        transition: "background-color 2s ease-in-out",
       }}
     >
       <h1
